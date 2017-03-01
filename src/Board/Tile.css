@@ -1,0 +1,34 @@
+.tileContainer {
+    display: flex;
+    flex: 1;
+    height: 3em;
+    margin: 0.3em;
+    position: relative;
+}
+.tileContainer > div {
+    position: absolute;
+    border-radius: 7px;
+    transform: perspective(600px);
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 3em;
+    backface-visibility: hidden;
+    transition: transform .5s linear 0s;
+
+}
+.tileContainer > .frontFace {
+	transform: rotateY(0deg);
+	background:#FC0;
+}
+.tileContainer > .backFace {
+	transform: rotateY(180deg);
+	background: #80BFFF;
+}
+.tileContainer:hover > .frontFace {
+	transform: perspective(600px) rotateY(-180deg);
+}
+.tileContainer:hover > .backFace{
+	transform: perspective(600px) rotateY(0deg);
+}
