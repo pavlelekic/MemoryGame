@@ -27,8 +27,8 @@
 	background: #80BFFF;
 }
 .tileContainer:hover > .frontFace {
-	transform: perspective(600px) rotateY(-180deg);
+	transform: rotateY(-180deg);
 }
 .tileContainer:hover > .backFace{
-	transform: perspective(600px) rotateY(0deg);
+	transform: rotateY(0deg);
 }
