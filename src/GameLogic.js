@@ -1,19 +1,18 @@
 // @flow weak
-import {Map} from 'immutable';
-const possibleTileValues = 'ABCDEFGHIJKLMNOPQRSTUWXYZ1234567890';
+import {Map, fromJS} from 'immutable';
+import {EventEmitter2} from 'eventemitter2';
 
 export default function GameLogic(initialSize = 2, onChange) {
     if (initialSize < 2) throw new Error("Game size should be greater than 1!");
+    EventEmitter2.call(this);
 
-    var levelStartTime;
     var size = initialSize;
     var tileValues;
     var isFlippedMap;
     var isPermanentlyRevealedMap;
 
     function initializeLevel(size) {
-        levelStartTime = Date.now() / 1000; // parseInt?
-        tileValues = generateMap(generateRandomTileValue);
+        tileValues = generateTilesGrid(size);
         isFlippedMap = new Map();
         isPermanentlyRevealedMap = new Map();
     }
@@ -21,13 +20,13 @@ export default function GameLogic(initialSize = 2, onChange) {
     initializeLevel(size);
 
     this.pressTile = function(rowIndex, columnIndex) {
-        if (!this._isPermanentlyRevealed(rowIndex, columnIndex) &&
-            !this._isFlipped(rowIndex, columnIndex)
+        if (!this.isPermanentlyRevealed(rowIndex, columnIndex) &&
+            !this.isFlipped(rowIndex, columnIndex)
         ) {
-            let numberOfTilesFlipped = isFlippedMap.length;
+            let numberOfTilesFlipped = isFlippedMap.size;
 
             if (numberOfTilesFlipped === 0) {
-                isFlippedMap: this.state.isFlippedMap.setIn([rowIndex, columnIndex], true);
+                isFlippedMap = isFlippedMap.setIn([rowIndex, columnIndex], true);
                 onChange();
             }
             else if (numberOfTilesFlipped === 1) {
@@ -38,67 +37,42 @@ export default function GameLogic(initialSize = 2, onChange) {
         }
     }
 
-    this.getScore() {
-        isPermanentlyRevealedMap.length * 100 - secondsElapsed
-    }
+    // this.getScore = function() {
+    //     isPermanentlyRevealedMap.length * 100 - secondsElapsed
+    // }
 
     this.isFlipped = function(rowIndex, columnIndex) {
-        return isFlippedMap[rowIndex][columnIndex] === true;
+        return isFlippedMap.getIn([rowIndex, columnIndex], false) === true;
     }
 
     this.isPermanentlyRevealed = function(rowIndex, columnIndex) {
-        return isPermanentlyRevealedMap[rowIndex][columnIndex] === true;
+        return isPermanentlyRevealedMap.getIn([rowIndex, columnIndex], false) === true;
     }
 
     this.getTilesMap = function() {
         return tileValues;
     }
 
-    _renderRow(rowIndex) {
-        return (
-            <tr>
-                {this.state.tileValues[rowIndex].map((tileData, columnIndex) => this._renderTile(rowIndex, columnIndex))}
-            </tr>
-        );
-    }
-
-    _renderTile(rowIndex, columnIndex) {
-        return (
-            <Tile
-                isFlipped={t.isFlipped}
-                isPermanentlyRevealed={t.isPermanentlyRevealed}
-                onPress={this._onTilePress}
-                rowIndex={rowIndex}
-                columnIndex={columnIndex}
-                value={this.state.tileValues.getIn([rowIndex, columnIndex])}
-                />
-        );
-    }
-
-    render() {
-        return (
-            <div>
-                {this.state.tiles.map((row, index) => this._renderRow(index))}
-            </div>
-        );
-    }
+    return this;
 }
 
+GameLogic.prototype = Object.create(EventEmitter2.prototype);
+GameLogic.prototype.constructor = EventEmitter2;
 
-function generateMap(valueGenerator) {
-    let map = new Map();
+const possibleTileValues = 'ABCDEFGHIJKLMNOPQRSTUWXYZ1234567890';
 
-    for (let i = 0; i < this.size; i++) {
-        map[i] = new Map();
+function generateTilesGrid(size: number) {
+    let map = {};
+    let charIndex;
 
-        for (let j = 0; j < this.size; j++)
-            map[i][j] = valueGenerator(i, j);
+    for (let i = 0; i < size; i++) {
+        map[i] = {};
+
+        for (let j = 0; j < size; j++) {
+            charIndex = Math.floor(Math.random() * size);
+            map[i][j] = possibleTileValues[charIndex];
+        }
     }
 
-    return map;
-}
-
-function generateRandomTileValue() {
-    let charIndex = Math.floor(Math.random() * this.size);
-    return possibleTileValues[charIndex];
+    return fromJS(map);
 }

@@ -6,8 +6,8 @@ import './Tile.css';
 export default class Tile extends Component {
     static propTypes = {
         onPress: React.PropTypes.func.isRequired,
-        rowIndex: React.PropTypes.number.isRequired,
-        columnIndex: React.PropTypes.number.isRequired,
+        rowIndex: React.PropTypes.string.isRequired,
+        columnIndex: React.PropTypes.string.isRequired,
         value: React.PropTypes.string.isRequired,
         isPermanentlyRevealed: React.PropTypes.bool.isRequired,
         isFlipped: React.PropTypes.bool.isRequired
