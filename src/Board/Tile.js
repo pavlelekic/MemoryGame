@@ -1,6 +1,7 @@
 // @flow weak
 import React, {Component} from 'react';
 import './Tile.css';
+const classNames = require('classnames');
 
 
 export default class Tile extends Component {
@@ -31,8 +32,8 @@ export default class Tile extends Component {
                 key={`${rowIndex},${columnIndex}`}
                 onClick={this._handlePress}>
 
-              <div className="backFace">{this.props.value}</div>
-              <div className="frontFace">Front</div>
+              <div className={classNames("backFace", {backFaceHidden: this.props.isFlipped})}>{this.props.value}</div>
+              <div className={classNames("frontFace", {frontFaceRevealed: this.props.isFlipped})}>Front</div>
             </div>
         );
     }

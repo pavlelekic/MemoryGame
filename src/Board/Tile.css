@@ -26,9 +26,9 @@
 	transform: rotateY(180deg);
 	background: #80BFFF;
 }
-.tileContainer:hover > .frontFace {
+.tileContainer > .frontFaceRevealed {
 	transform: rotateY(-180deg);
 }
-.tileContainer:hover > .backFace{
+.tileContainer > .backFaceHidden{
 	transform: rotateY(0deg);
 }
