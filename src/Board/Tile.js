@@ -1,6 +1,6 @@
 // @flow weak
-import React, {Component} from 'react';
 import './Tile.css';
+import React, {Component} from 'react';
 const classNames = require('classnames');
 
 
@@ -25,6 +25,9 @@ export default class Tile extends Component {
 
     render() {
         let {rowIndex, columnIndex} = this.props;
+        let isRevealed = this.props.isFlipped || this.props.isPermanentlyRevealed;
+        let backClass = classNames("backFace", {backFaceHidden: isRevealed});
+        let frontClass = classNames("frontFace", {frontFaceRevealed: isRevealed});
 
         return (
             <div
@@ -32,8 +35,8 @@ export default class Tile extends Component {
                 key={`${rowIndex},${columnIndex}`}
                 onClick={this._handlePress}>
 
-              <div className={classNames("backFace", {backFaceHidden: this.props.isFlipped})}>{this.props.value}</div>
-              <div className={classNames("frontFace", {frontFaceRevealed: this.props.isFlipped})}>Front</div>
+              <div className={backClass}>{this.props.value}</div>
+              <div className={frontClass}>Front</div>
             </div>
         );
     }

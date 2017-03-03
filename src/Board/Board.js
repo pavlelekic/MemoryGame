@@ -1,4 +1,5 @@
 // @flow weak
+import './Board.css';
 import React, {Component} from 'react';
 import Tile from './Tile';
 
@@ -34,7 +35,7 @@ export default class Board extends Component {
 
     render() {
         return (
-            <div>
+            <div className="board">
                 {this.props.tiles.map(this._renderRow, this)}
             </div>
         );

@@ -17,6 +17,19 @@ export default function GameLogic(initialSize = 2, onChange) {
         isPermanentlyRevealedMap = new Map();
     }
 
+    function getFlippedTileValue() {
+        let rowIndex = isFlippedMap.keySeq().first();
+        let columnIndex = isFlippedMap.get(rowIndex).keySeq().first();
+
+        return tileValues.getIn([rowIndex, columnIndex]);
+    }
+
+    function moveFilppedTilesToPermanentlyRevealedMap() {
+        isFlippedMap.forEach((row, rowIndex) => row.forEach((value, columnIndex) => {
+            isPermanentlyRevealedMap = isPermanentlyRevealedMap.setIn([rowIndex, columnIndex], true);
+        }));
+    }
+
     initializeLevel(size);
 
     this.pressTile = function(rowIndex, columnIndex) {
@@ -30,9 +43,24 @@ export default function GameLogic(initialSize = 2, onChange) {
                 onChange();
             }
             else if (numberOfTilesFlipped === 1) {
-                // check if tiles match
-                // if so, add score and keep them open (move from isFlippedMap to isPermanentlyRevealedMap)
-                // else setState({selectedTiles: {}});
+                var firstFlippedTileValue = getFlippedTileValue();
+                var secondFlippedTileValue = tileValues.getIn([rowIndex, columnIndex]);
+
+                if (firstFlippedTileValue === secondFlippedTileValue) {
+                    moveFilppedTilesToPermanentlyRevealedMap();
+                    isFlippedMap = new Map();
+                    isPermanentlyRevealedMap = isPermanentlyRevealedMap.setIn([rowIndex, columnIndex], true);
+                    onChange();
+                }
+                else {
+                    isFlippedMap = isFlippedMap.setIn([rowIndex, columnIndex], true);
+                    onChange();
+
+                    setTimeout(function() {
+                        isFlippedMap = new Map();
+                        onChange();
+                    }, 1000);
+                }
             }
         }
     }
