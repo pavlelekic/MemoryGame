@@ -36,7 +36,7 @@ export default class Tile extends Component {
                 onClick={this._handlePress}>
 
               <div className={backClass}>{this.props.value}</div>
-              <div className={frontClass}>Front</div>
+              <div className={frontClass}>?</div>
             </div>
         );
     }

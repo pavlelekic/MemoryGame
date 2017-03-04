@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 // import Score from './Score';
 // import Timer from './Timer';
-import GameLogic from './GameLogic';
+import GameLogic from './GameLogic/GameLogic';
 import Board from './Board/Board.js';
 
 export default class GameRootComponent extends Component {
@@ -10,7 +10,7 @@ export default class GameRootComponent extends Component {
         super(props);
 
         this.state = {
-            gameLogic: new GameLogic(3, this.forceUpdate.bind(this))
+            gameLogic: new GameLogic(4, this.forceUpdate.bind(this))
         };
 
         (this: any)._onTilePress = this._onTilePress.bind(this);

@@ -1,6 +1,7 @@
 // @flow weak
 import {Map, fromJS} from 'immutable';
 import {EventEmitter2} from 'eventemitter2';
+import generateTilesMatrix from './generateTilesMatrix';
 
 export default function GameLogic(initialSize = 2, onChange) {
     if (initialSize < 2) throw new Error("Game size should be greater than 1!");
@@ -10,11 +11,14 @@ export default function GameLogic(initialSize = 2, onChange) {
     var tileValues;
     var isFlippedMap;
     var isPermanentlyRevealedMap;
+    var isBoardFreezed;
 
     function initializeLevel(size) {
-        tileValues = generateTilesGrid(size);
+        let mutableTilesGrid = generateTilesMatrix(size);
+        tileValues = fromJS(mutableTilesGrid);
         isFlippedMap = new Map();
         isPermanentlyRevealedMap = new Map();
+        isBoardFreezed = false;
     }
 
     function getFlippedTileValue() {
@@ -34,7 +38,8 @@ export default function GameLogic(initialSize = 2, onChange) {
 
     this.pressTile = function(rowIndex, columnIndex) {
         if (!this.isPermanentlyRevealed(rowIndex, columnIndex) &&
-            !this.isFlipped(rowIndex, columnIndex)
+            !this.isFlipped(rowIndex, columnIndex) &&
+            !isBoardFreezed
         ) {
             let numberOfTilesFlipped = isFlippedMap.size;
 
@@ -54,10 +59,12 @@ export default function GameLogic(initialSize = 2, onChange) {
                 }
                 else {
                     isFlippedMap = isFlippedMap.setIn([rowIndex, columnIndex], true);
+                    isBoardFreezed = true;
                     onChange();
 
                     setTimeout(function() {
                         isFlippedMap = new Map();
+                        isBoardFreezed = false;
                         onChange();
                     }, 1000);
                 }
@@ -86,21 +93,3 @@ export default function GameLogic(initialSize = 2, onChange) {
 
 GameLogic.prototype = Object.create(EventEmitter2.prototype);
 GameLogic.prototype.constructor = EventEmitter2;
-
-const possibleTileValues = 'ABCDEFGHIJKLMNOPQRSTUWXYZ1234567890';
-
-function generateTilesGrid(size: number) {
-    let map = {};
-    let charIndex;
-
-    for (let i = 0; i < size; i++) {
-        map[i] = {};
-
-        for (let j = 0; j < size; j++) {
-            charIndex = Math.floor(Math.random() * size);
-            map[i][j] = possibleTileValues[charIndex];
-        }
-    }
-
-    return fromJS(map);
-}
