@@ -26,6 +26,27 @@ export default function Level(initialSize = 2) {
         }));
     }
 
+    var self = this;
+
+    function handleTilesMatch(rowIndex, columnIndex) {
+        moveFilppedTilesToPermanentlyRevealedMap();
+        isFlippedMap = new Map();
+        isPermanentlyRevealedMap = isPermanentlyRevealedMap.setIn([rowIndex, columnIndex], true);
+        self.emit('rerender');
+    }
+
+    function handleTilesMismatch(rowIndex, columnIndex) {
+        isFlippedMap = isFlippedMap.setIn([rowIndex, columnIndex], true);
+        isBoardFreezed = true;
+        self.emit('rerender');
+
+        setTimeout(function() {
+            isFlippedMap = new Map();
+            isBoardFreezed = false;
+            self.emit('rerender');
+        }, 1000);
+    }
+
     this.pressTile = function(rowIndex, columnIndex) {
         if (!this.isPermanentlyRevealed(rowIndex, columnIndex) &&
             !this.isFlipped(rowIndex, columnIndex) &&
@@ -42,22 +63,10 @@ export default function Level(initialSize = 2) {
                 var secondFlippedTileValue = tileValues[rowIndex][columnIndex];
 
                 if (firstFlippedTileValue === secondFlippedTileValue) {
-                    moveFilppedTilesToPermanentlyRevealedMap();
-                    isFlippedMap = new Map();
-                    isPermanentlyRevealedMap = isPermanentlyRevealedMap.setIn([rowIndex, columnIndex], true);
-                    this.emit('rerender');
+                    handleTilesMatch(rowIndex, columnIndex);
                 }
                 else {
-                    isFlippedMap = isFlippedMap.setIn([rowIndex, columnIndex], true);
-                    isBoardFreezed = true;
-                    this.emit('rerender');
-                    var self = this;
-
-                    setTimeout(function() {
-                        isFlippedMap = new Map();
-                        isBoardFreezed = false;
-                        self.emit('rerender');
-                    }, 1000);
+                    handleTilesMismatch(rowIndex, columnIndex);
                 }
             }
         }
