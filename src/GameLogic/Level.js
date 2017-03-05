@@ -3,6 +3,8 @@ import {Map} from 'immutable';
 import {EventEmitter2} from 'eventemitter2';
 import generateTilesMatrix from './generateTilesMatrix';
 
+const SCORE_INCREMENT = 100;
+
 export default function Level(initialSize = 2) {
     if (initialSize < 2) throw new Error("Game size should be greater than 1!");
     EventEmitter2.call(this);
@@ -12,6 +14,7 @@ export default function Level(initialSize = 2) {
     var isFlippedMap = new Map();
     var isPermanentlyRevealedMap = new Map();
     var isBoardFreezed = false;
+    var score = 0;
 
     function getFlippedTileValue() {
         let rowIndex = isFlippedMap.keySeq().first();
@@ -32,6 +35,7 @@ export default function Level(initialSize = 2) {
         moveFilppedTilesToPermanentlyRevealedMap();
         isFlippedMap = new Map();
         isPermanentlyRevealedMap = isPermanentlyRevealedMap.setIn([rowIndex, columnIndex], true);
+        score += SCORE_INCREMENT;
         self.emit('rerender');
     }
 
@@ -70,7 +74,7 @@ export default function Level(initialSize = 2) {
                 }
             }
         }
-    }
+    };
 
     // this.getScore = function() {
     //     isPermanentlyRevealedMap.length * 100 - secondsElapsed
@@ -78,15 +82,19 @@ export default function Level(initialSize = 2) {
 
     this.isFlipped = function(rowIndex, columnIndex) {
         return isFlippedMap.getIn([rowIndex, columnIndex], false) === true;
-    }
+    };
 
     this.isPermanentlyRevealed = function(rowIndex, columnIndex) {
         return isPermanentlyRevealedMap.getIn([rowIndex, columnIndex], false) === true;
-    }
+    };
 
     this.getTilesMap = function() {
         return tileValues;
-    }
+    };
+
+    this.getScore = function() {
+        return score;
+    };
 
     return this;
 }

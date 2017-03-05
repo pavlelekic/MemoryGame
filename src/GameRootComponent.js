@@ -1,6 +1,6 @@
 // @flow weak
 import React, {Component} from 'react';
-// import Score from './Score';
+import Score from './Score';
 // import Timer from './Timer';
 import Level from './GameLogic/Level';
 import Board from './Board/Board.js';
@@ -33,12 +33,15 @@ export default class GameRootComponent extends Component {
         let l = this.state.level;
 
         return (
-            <Board
-                isPermanentlyRevealed={l.isPermanentlyRevealed}
-                tiles={l.getTilesMap()}
-                isFlipped={l.isFlipped}
-                onTilePress={this._onTilePress}
-                />
+            <div style={{display: 'flex', flexDirection: 'column'}}>
+                <Score score={l.getScore()} />
+                <Board
+                    isPermanentlyRevealed={l.isPermanentlyRevealed}
+                    tiles={l.getTilesMap()}
+                    isFlipped={l.isFlipped}
+                    onTilePress={this._onTilePress}
+                    />
+            </div>
         );
     }
 }
