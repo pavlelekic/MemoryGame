@@ -10,10 +10,19 @@ export default class GameRootComponent extends Component {
         super(props);
 
         this.state = {
-            level: new Level(4, this.forceUpdate.bind(this))
+            level: new Level(4)
         };
 
         (this: any)._onTilePress = this._onTilePress.bind(this);
+        (this: any).forceUpdate = this.forceUpdate.bind(this);
+    }
+
+    componentWillMount() {
+        this.state.level.addListener('rerender', this.forceUpdate);
+    }
+
+    componentWillUnmount() {
+        this.state.level.removeListener('rerender', this.forceUpdate);
     }
 
     _onTilePress(rowIndex, columnIndex) {

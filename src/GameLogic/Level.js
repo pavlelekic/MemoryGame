@@ -3,7 +3,7 @@ import {Map} from 'immutable';
 import {EventEmitter2} from 'eventemitter2';
 import generateTilesMatrix from './generateTilesMatrix';
 
-export default function Level(initialSize = 2, onChange) {
+export default function Level(initialSize = 2) {
     if (initialSize < 2) throw new Error("Game size should be greater than 1!");
     EventEmitter2.call(this);
 
@@ -35,7 +35,7 @@ export default function Level(initialSize = 2, onChange) {
 
             if (numberOfTilesFlipped === 0) {
                 isFlippedMap = isFlippedMap.setIn([rowIndex, columnIndex], true);
-                onChange();
+                this.emit('rerender');
             }
             else if (numberOfTilesFlipped === 1) {
                 var firstFlippedTileValue = getFlippedTileValue();
@@ -45,17 +45,18 @@ export default function Level(initialSize = 2, onChange) {
                     moveFilppedTilesToPermanentlyRevealedMap();
                     isFlippedMap = new Map();
                     isPermanentlyRevealedMap = isPermanentlyRevealedMap.setIn([rowIndex, columnIndex], true);
-                    onChange();
+                    this.emit('rerender');
                 }
                 else {
                     isFlippedMap = isFlippedMap.setIn([rowIndex, columnIndex], true);
                     isBoardFreezed = true;
-                    onChange();
+                    this.emit('rerender');
+                    var self = this;
 
                     setTimeout(function() {
                         isFlippedMap = new Map();
                         isBoardFreezed = false;
-                        onChange();
+                        self.emit('rerender');
                     }, 1000);
                 }
             }
