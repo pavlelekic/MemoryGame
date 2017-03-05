@@ -22,14 +22,14 @@ function generate1DMatrixOfPairs(size) {
 }
 
 function convert1DMatrixTo2D(matrix1d, size) {
-    var rowIndex, columnIndex, matrix2d = {};
+    var rowIndex, columnIndex, matrix2d = [];
 
     for (var i = matrix1d.length - 1; i >= 0; i--) {
         rowIndex = Math.floor(i / size);
         columnIndex = i % size;
 
         if (!matrix2d[rowIndex]) {
-            matrix2d[rowIndex] = {};
+            matrix2d[rowIndex] = [];
         }
 
         matrix2d[rowIndex][columnIndex] = matrix1d[i];

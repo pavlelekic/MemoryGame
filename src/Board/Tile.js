@@ -7,8 +7,8 @@ const classNames = require('classnames');
 export default class Tile extends Component {
     static propTypes = {
         onPress: React.PropTypes.func.isRequired,
-        rowIndex: React.PropTypes.string.isRequired,
-        columnIndex: React.PropTypes.string.isRequired,
+        rowIndex: React.PropTypes.number.isRequired,
+        columnIndex: React.PropTypes.number.isRequired,
         value: React.PropTypes.string.isRequired,
         isPermanentlyRevealed: React.PropTypes.bool.isRequired,
         isFlipped: React.PropTypes.bool.isRequired
@@ -24,17 +24,12 @@ export default class Tile extends Component {
     }
 
     render() {
-        let {rowIndex, columnIndex} = this.props;
         let isRevealed = this.props.isFlipped || this.props.isPermanentlyRevealed;
         let backClass = classNames("backFace", {backFaceHidden: isRevealed});
         let frontClass = classNames("frontFace", {frontFaceRevealed: isRevealed});
 
         return (
-            <div
-                className="tileContainer"
-                key={`${rowIndex},${columnIndex}`}
-                onClick={this._handlePress}>
-
+            <div className="tileContainer" onClick={this._handlePress}>
               <div className={backClass}>{this.props.value}</div>
               <div className={frontClass}>?</div>
             </div>

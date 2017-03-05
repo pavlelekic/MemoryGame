@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 // import Score from './Score';
 // import Timer from './Timer';
-import GameLogic from './GameLogic/GameLogic';
+import Level from './GameLogic/Level';
 import Board from './Board/Board.js';
 
 export default class GameRootComponent extends Component {
@@ -10,24 +10,24 @@ export default class GameRootComponent extends Component {
         super(props);
 
         this.state = {
-            gameLogic: new GameLogic(4, this.forceUpdate.bind(this))
+            level: new Level(4, this.forceUpdate.bind(this))
         };
 
         (this: any)._onTilePress = this._onTilePress.bind(this);
     }
 
     _onTilePress(rowIndex, columnIndex) {
-        this.state.gameLogic.pressTile(rowIndex, columnIndex);
+        this.state.level.pressTile(rowIndex, columnIndex);
     }
 
     render() {
-        let gl = this.state.gameLogic;
+        let l = this.state.level;
 
         return (
             <Board
-                isPermanentlyRevealed={gl.isPermanentlyRevealed}
-                tiles={gl.getTilesMap()}
-                isFlipped={gl.isFlipped}
+                isPermanentlyRevealed={l.isPermanentlyRevealed}
+                tiles={l.getTilesMap()}
+                isFlipped={l.isFlipped}
                 onTilePress={this._onTilePress}
                 />
         );

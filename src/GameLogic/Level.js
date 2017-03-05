@@ -1,31 +1,23 @@
 // @flow weak
-import {Map, fromJS} from 'immutable';
+import {Map} from 'immutable';
 import {EventEmitter2} from 'eventemitter2';
 import generateTilesMatrix from './generateTilesMatrix';
 
-export default function GameLogic(initialSize = 2, onChange) {
+export default function Level(initialSize = 2, onChange) {
     if (initialSize < 2) throw new Error("Game size should be greater than 1!");
     EventEmitter2.call(this);
 
     var size = initialSize;
-    var tileValues;
-    var isFlippedMap;
-    var isPermanentlyRevealedMap;
-    var isBoardFreezed;
-
-    function initializeLevel(size) {
-        let mutableTilesGrid = generateTilesMatrix(size);
-        tileValues = fromJS(mutableTilesGrid);
-        isFlippedMap = new Map();
-        isPermanentlyRevealedMap = new Map();
-        isBoardFreezed = false;
-    }
+    var tileValues = generateTilesMatrix(size);
+    var isFlippedMap = new Map();
+    var isPermanentlyRevealedMap = new Map();
+    var isBoardFreezed = false;
 
     function getFlippedTileValue() {
         let rowIndex = isFlippedMap.keySeq().first();
         let columnIndex = isFlippedMap.get(rowIndex).keySeq().first();
 
-        return tileValues.getIn([rowIndex, columnIndex]);
+        return tileValues[rowIndex][columnIndex];
     }
 
     function moveFilppedTilesToPermanentlyRevealedMap() {
@@ -33,8 +25,6 @@ export default function GameLogic(initialSize = 2, onChange) {
             isPermanentlyRevealedMap = isPermanentlyRevealedMap.setIn([rowIndex, columnIndex], true);
         }));
     }
-
-    initializeLevel(size);
 
     this.pressTile = function(rowIndex, columnIndex) {
         if (!this.isPermanentlyRevealed(rowIndex, columnIndex) &&
@@ -49,7 +39,7 @@ export default function GameLogic(initialSize = 2, onChange) {
             }
             else if (numberOfTilesFlipped === 1) {
                 var firstFlippedTileValue = getFlippedTileValue();
-                var secondFlippedTileValue = tileValues.getIn([rowIndex, columnIndex]);
+                var secondFlippedTileValue = tileValues[rowIndex][columnIndex];
 
                 if (firstFlippedTileValue === secondFlippedTileValue) {
                     moveFilppedTilesToPermanentlyRevealedMap();
@@ -91,5 +81,5 @@ export default function GameLogic(initialSize = 2, onChange) {
     return this;
 }
 
-GameLogic.prototype = Object.create(EventEmitter2.prototype);
-GameLogic.prototype.constructor = EventEmitter2;
+Level.prototype = Object.create(EventEmitter2.prototype);
+Level.prototype.constructor = EventEmitter2;
