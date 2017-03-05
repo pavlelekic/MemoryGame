@@ -1,15 +1,14 @@
 // @flow weak
-import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
+import React, {PureComponent} from 'react';
 
-export default class Score extends Component {
+export default class Score extends PureComponent {
     static propTypes = {
         score: React.PropTypes.number.isRequired
     };
 
     render() {
         return (
-            <span>{`Score: ${this.props.score} points`}</span>
+            <span style={{fontSize: 44}}>{`Score: ${this.props.score} points`}</span>
         );
     }
 }
