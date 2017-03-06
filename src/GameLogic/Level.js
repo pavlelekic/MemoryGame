@@ -15,6 +15,18 @@ export default function Level(initialSize = 2) {
     var isPermanentlyRevealedMap = new Map();
     var isBoardFreezed = false;
     var score = 0;
+    var secondsRemaining = 30;
+    var intervalID = setInterval(decrementSecondsRemaining, 1000);
+
+    function decrementSecondsRemaining() {
+        secondsRemaining--;
+        self.emit('rerender');
+
+        if (secondsRemaining === 0) {
+            clearInterval(intervalID);
+            self.emit('game-over-time-elapsed');
+        }
+    }
 
     function getFlippedTileValue() {
         let rowIndex = isFlippedMap.keySeq().first();
@@ -36,6 +48,7 @@ export default function Level(initialSize = 2) {
         isFlippedMap = new Map();
         isPermanentlyRevealedMap = isPermanentlyRevealedMap.setIn([rowIndex, columnIndex], true);
         score += SCORE_INCREMENT;
+        // if isPermanentlyRevealed.size === size*size => game over level completed!!
         self.emit('rerender');
     }
 
