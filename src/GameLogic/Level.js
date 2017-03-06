@@ -9,6 +9,7 @@ export default function Level(initialSize = 2) {
     if (initialSize < 2) throw new Error("Game size should be greater than 1!");
     EventEmitter2.call(this);
 
+    var self = this;
     var size = initialSize;
     var tileValues = generateTilesMatrix(size);
     var isFlippedMap = new Map();
@@ -41,7 +42,6 @@ export default function Level(initialSize = 2) {
         }));
     }
 
-    var self = this;
 
     function handleTilesMatch(rowIndex, columnIndex) {
         moveFilppedTilesToPermanentlyRevealedMap();
