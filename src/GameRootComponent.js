@@ -1,7 +1,7 @@
 // @flow weak
 import React, {Component} from 'react';
 import Score from './Score';
-// import Timer from './Timer';
+import Timer from './Timer';
 import Level from './GameLogic/Level';
 import Board from './Board/Board.js';
 
@@ -34,6 +34,7 @@ export default class GameRootComponent extends Component {
 
         return (
             <div style={{display: 'flex', flexDirection: 'column'}}>
+                <Timer secondsRemaining={l.getSecondsRemaining()} />
                 <Score score={l.getScore()} />
                 <Board
                     isPermanentlyRevealed={l.isPermanentlyRevealed}

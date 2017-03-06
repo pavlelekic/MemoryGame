@@ -97,6 +97,10 @@ export default function Level(initialSize = 2) {
         return isFlippedMap.getIn([rowIndex, columnIndex], false) === true;
     };
 
+    this.getSecondsRemaining = function() {
+        return secondsRemaining;
+    };
+
     this.isPermanentlyRevealed = function(rowIndex, columnIndex) {
         return isPermanentlyRevealedMap.getIn([rowIndex, columnIndex], false) === true;
     };

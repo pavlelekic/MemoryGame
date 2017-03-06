@@ -1,31 +1,14 @@
 // @flow weak
-import React from 'react';
-// timer mixin??!?
+import React, {PureComponent} from 'react';
 
+export default class Score extends PureComponent {
+    static propTypes = {
+        secondsRemaining: React.PropTypes.number.isRequired
+    };
 
-export default class Timer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {secondsElapsed: 0};
-  }
-
-  tick() {
-    this.setState((prevState) => ({
-      secondsElapsed: prevState.secondsElapsed + 1
-    }));
-  }
-
-  componentDidMount() {
-    this.interval = setInterval(() => this.tick(), 1000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
-  render() {
-    return (
-      <div>Seconds Elapsed: {this.state.secondsElapsed}</div>
-    );
-  }
+    render() {
+        return (
+            <span style={{fontSize: 44}}>{`Remaining ${this.props.secondsRemaining} seconds`}</span>
+        );
+    }
 }
