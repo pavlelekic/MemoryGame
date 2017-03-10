@@ -16,16 +16,16 @@ export default function Level(initialSize = 2) {
     var isPermanentlyRevealedMap = new Map();
     var isBoardFreezed = false;
     var score = 0;
-    var secondsRemaining = 30;
+    var secondsRemaining = 40;
     var intervalID = setInterval(decrementSecondsRemaining, 1000);
 
     function decrementSecondsRemaining() {
         secondsRemaining--;
-        self.emit('rerender');
+        self.emit('board-change');
 
         if (secondsRemaining === 0) {
             clearInterval(intervalID);
-            self.emit('game-over-time-elapsed');
+            self.emit('time-elapsed');
         }
     }
 
@@ -42,26 +42,37 @@ export default function Level(initialSize = 2) {
         }));
     }
 
-
     function handleTilesMatch(rowIndex, columnIndex) {
         moveFilppedTilesToPermanentlyRevealedMap();
         isFlippedMap = new Map();
         isPermanentlyRevealedMap = isPermanentlyRevealedMap.setIn([rowIndex, columnIndex], true);
         score += SCORE_INCREMENT;
-        // if isPermanentlyRevealed.size === size*size => game over level completed!!
-        self.emit('rerender');
+        self.emit('board-change');
+
+        if (isWholeBoardRevealed()) {
+            clearInterval(intervalID);
+            self.emit('level-completed');
+        }
     }
 
     function handleTilesMismatch(rowIndex, columnIndex) {
         isFlippedMap = isFlippedMap.setIn([rowIndex, columnIndex], true);
         isBoardFreezed = true;
-        self.emit('rerender');
+        self.emit('board-change');
 
-        setTimeout(function() {
+        setTimeout(function() { // CHANGE THIS TO EMIT TILES MATCH!!
             isFlippedMap = new Map();
-            isBoardFreezed = false;
-            self.emit('rerender');
+            isBoardFreezed = false; // REMOVE THIS!
+            self.emit('board-change');
         }, 1000);
+    }
+
+    function isWholeBoardRevealed() {
+        if (isPermanentlyRevealedMap.size < size) {
+            return false;
+        }
+
+        return isPermanentlyRevealedMap.every(row => row.size === size);
     }
 
     this.pressTile = function(rowIndex, columnIndex) {
@@ -73,7 +84,7 @@ export default function Level(initialSize = 2) {
 
             if (numberOfTilesFlipped === 0) {
                 isFlippedMap = isFlippedMap.setIn([rowIndex, columnIndex], true);
-                this.emit('rerender');
+                this.emit('board-change');
             }
             else if (numberOfTilesFlipped === 1) {
                 var firstFlippedTileValue = getFlippedTileValue();
@@ -88,10 +99,6 @@ export default function Level(initialSize = 2) {
             }
         }
     };
-
-    // this.getScore = function() {
-    //     isPermanentlyRevealedMap.length * 100 - secondsElapsed
-    // }
 
     this.isFlipped = function(rowIndex, columnIndex) {
         return isFlippedMap.getIn([rowIndex, columnIndex], false) === true;
