@@ -4,6 +4,9 @@ import Score from './Score';
 import Timer from './Timer';
 import Level from './GameLogic/Level';
 import Board from './Board/Board.js';
+const TimerMixin = require('react-timer-mixin');
+const reactMixin = require('react-mixin');
+
 
 const modes = {
     REPLAY_CURRENT_LEVEL: 'REPLAY_CURRENT_LEVEL',
@@ -11,7 +14,7 @@ const modes = {
     PLAYING: 'PLAYING'
 };
 
-export default class GameRootComponent extends Component {
+class MemoryGame extends Component {
     constructor(props) {
         super(props);
 
@@ -25,8 +28,8 @@ export default class GameRootComponent extends Component {
         (this: any)._startLevel = this._startLevel.bind(this);
         (this: any)._advanceToNextLevel = this._advanceToNextLevel.bind(this);
         (this: any)._replayCurrentLevel = this._replayCurrentLevel.bind(this);
+        (this: any)._onTilesMismatch = this._onTilesMismatch.bind(this);
         (this: any)._onGameOverLevelCompleted = this._onGameOverLevelCompleted.bind(this);
-
     }
 
     _onGameOverTimeElapsed() {
@@ -48,16 +51,33 @@ export default class GameRootComponent extends Component {
         });
     }
 
+    _onTilesMismatch(firstFlippedTile, secondFlippedTile) {
+        this.setState({
+            tileMismatches: [
+                firstFlippedTile,
+                secondFlippedTile
+            ]
+        });
+
+        this.setTimeout(() => {
+            this.setState({
+                tileMismatches: null
+            });
+        }, 800);
+    }
+
     _attachListeners() {
-        this.state.level.addListener('board-change', this.forceUpdate);
+        this.state.level.addListener('board-changed', this.forceUpdate);
         this.state.level.addListener('time-elapsed', this._onGameOverTimeElapsed);
         this.state.level.addListener('level-completed', this._onGameOverLevelCompleted);
+        this.state.level.addListener('tiles-mismatch', this._onTilesMismatch);
     }
 
     _detachListeners() {
-        this.state.level.removeListener('board-change', this.forceUpdate);
+        this.state.level.removeListener('board-changed', this.forceUpdate);
         this.state.level.removeListener('time-elapsed', this._onGameOverTimeElapsed);
         this.state.level.removeListener('level-completed', this._onGameOverLevelCompleted);
+        this.state.level.removeListener('tiles-mismatch', this._onTilesMismatch);
     }
 
     _advanceToNextLevel() {
@@ -115,6 +135,7 @@ export default class GameRootComponent extends Component {
                     tiles={l.getTilesMap()}
                     isFlipped={l.isFlipped}
                     onTilePress={this._onTilePress}
+                    tileMismatches={this.state.tileMismatches}
                     />
             </div>
         );
@@ -136,3 +157,7 @@ export default class GameRootComponent extends Component {
         }
     }
 }
+
+reactMixin(MemoryGame.prototype, TimerMixin);
+
+export default MemoryGame;

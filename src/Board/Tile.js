@@ -11,7 +11,8 @@ export default class Tile extends Component {
         columnIndex: React.PropTypes.number.isRequired,
         value: React.PropTypes.string.isRequired,
         isPermanentlyRevealed: React.PropTypes.bool.isRequired,
-        isFlipped: React.PropTypes.bool.isRequired
+        isFlipped: React.PropTypes.bool.isRequired,
+        isMismatched: React.PropTypes.bool.isRequired
     };
 
     constructor(props) {
@@ -24,14 +25,19 @@ export default class Tile extends Component {
     }
 
     render() {
-        let isRevealed = this.props.isFlipped || this.props.isPermanentlyRevealed;
-        let backClass = classNames("backFace", {backFaceHidden: isRevealed});
-        let frontClass = classNames("frontFace", {frontFaceRevealed: isRevealed});
+        let p = this.props;
+        let isRevealed = p.isFlipped || p.isPermanentlyRevealed || p.isMismatched;
+        let backClass = classNames(
+            "backFace",
+            {backFaceRevealed: isRevealed},
+            {mismatched: p.isMismatched}
+        );
+        let frontClass = classNames("frontFace", {frontFaceHidden: isRevealed});
 
         return (
             <div className="tileContainer" onClick={this._handlePress}>
-              <div className={backClass}>{this.props.value}</div>
-              <div className={frontClass}>?</div>
+                <div className={backClass}>{p.value}</div>
+                <div className={frontClass}>?</div>
             </div>
         );
     }

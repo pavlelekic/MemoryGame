@@ -12,16 +12,15 @@ export default function Level(initialSize = 2) {
     var self = this;
     var size = initialSize;
     var tileValues = generateTilesMatrix(size);
-    var isFlippedMap = new Map();
+    var flippedTile = null;
     var isPermanentlyRevealedMap = new Map();
-    var isBoardFreezed = false;
     var score = 0;
     var secondsRemaining = 40;
     var intervalID = setInterval(decrementSecondsRemaining, 1000);
 
     function decrementSecondsRemaining() {
         secondsRemaining--;
-        self.emit('board-change');
+        self.emit('board-changed');
 
         if (secondsRemaining === 0) {
             clearInterval(intervalID);
@@ -29,25 +28,12 @@ export default function Level(initialSize = 2) {
         }
     }
 
-    function getFlippedTileValue() {
-        let rowIndex = isFlippedMap.keySeq().first();
-        let columnIndex = isFlippedMap.get(rowIndex).keySeq().first();
-
-        return tileValues[rowIndex][columnIndex];
-    }
-
-    function moveFilppedTilesToPermanentlyRevealedMap() {
-        isFlippedMap.forEach((row, rowIndex) => row.forEach((value, columnIndex) => {
-            isPermanentlyRevealedMap = isPermanentlyRevealedMap.setIn([rowIndex, columnIndex], true);
-        }));
-    }
-
     function handleTilesMatch(rowIndex, columnIndex) {
-        moveFilppedTilesToPermanentlyRevealedMap();
-        isFlippedMap = new Map();
         isPermanentlyRevealedMap = isPermanentlyRevealedMap.setIn([rowIndex, columnIndex], true);
+        isPermanentlyRevealedMap = isPermanentlyRevealedMap.setIn([flippedTile.rowIndex, flippedTile.columnIndex], true);
+        flippedTile = null;
         score += SCORE_INCREMENT;
-        self.emit('board-change');
+        self.emit('board-changed');
 
         if (isWholeBoardRevealed()) {
             clearInterval(intervalID);
@@ -56,15 +42,9 @@ export default function Level(initialSize = 2) {
     }
 
     function handleTilesMismatch(rowIndex, columnIndex) {
-        isFlippedMap = isFlippedMap.setIn([rowIndex, columnIndex], true);
-        isBoardFreezed = true;
-        self.emit('board-change');
-
-        setTimeout(function() { // CHANGE THIS TO EMIT TILES MATCH!!
-            isFlippedMap = new Map();
-            isBoardFreezed = false; // REMOVE THIS!
-            self.emit('board-change');
-        }, 1000);
+        self.emit('tiles-mismatch', {rowIndex, columnIndex}, flippedTile);
+        flippedTile = null;
+        self.emit('board-changed');
     }
 
     function isWholeBoardRevealed() {
@@ -75,33 +55,36 @@ export default function Level(initialSize = 2) {
         return isPermanentlyRevealedMap.every(row => row.size === size);
     }
 
+    function checkIfTilesMatch(rowIndex, columnIndex) {
+        let firstFlippedTileValue = tileValues[flippedTile.rowIndex][flippedTile.columnIndex]
+        let secondFlippedTileValue = tileValues[rowIndex][columnIndex];
+
+        if (firstFlippedTileValue === secondFlippedTileValue) {
+            handleTilesMatch(rowIndex, columnIndex);
+        }
+        else {
+            handleTilesMismatch(rowIndex, columnIndex);
+        }
+    }
+
+    // public part
+
     this.pressTile = function(rowIndex, columnIndex) {
         if (!this.isPermanentlyRevealed(rowIndex, columnIndex) &&
-            !this.isFlipped(rowIndex, columnIndex) &&
-            !isBoardFreezed
+            !this.isFlipped(rowIndex, columnIndex)
         ) {
-            let numberOfTilesFlipped = isFlippedMap.size;
-
-            if (numberOfTilesFlipped === 0) {
-                isFlippedMap = isFlippedMap.setIn([rowIndex, columnIndex], true);
-                this.emit('board-change');
+            if (flippedTile) {
+                checkIfTilesMatch(rowIndex, columnIndex);
             }
-            else if (numberOfTilesFlipped === 1) {
-                var firstFlippedTileValue = getFlippedTileValue();
-                var secondFlippedTileValue = tileValues[rowIndex][columnIndex];
-
-                if (firstFlippedTileValue === secondFlippedTileValue) {
-                    handleTilesMatch(rowIndex, columnIndex);
-                }
-                else {
-                    handleTilesMismatch(rowIndex, columnIndex);
-                }
+            else {
+                flippedTile = flippedTile = {rowIndex, columnIndex};
+                this.emit('board-changed');
             }
         }
     };
 
     this.isFlipped = function(rowIndex, columnIndex) {
-        return isFlippedMap.getIn([rowIndex, columnIndex], false) === true;
+        return flippedTile !== null && flippedTile.rowIndex === rowIndex && flippedTile.columnIndex === columnIndex;
     };
 
     this.getSecondsRemaining = function() {
@@ -109,7 +92,7 @@ export default function Level(initialSize = 2) {
     };
 
     this.isPermanentlyRevealed = function(rowIndex, columnIndex) {
-        return isPermanentlyRevealedMap.getIn([rowIndex, columnIndex], false) === true;
+        return isPermanentlyRevealedMap.getIn([rowIndex, columnIndex], false);
     };
 
     this.getTilesMap = function() {

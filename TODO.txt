@@ -1,0 +1,9 @@
+
+TO DO:
+* responsive thing
+
+
+ALREADY DONE:
+* make new events 'tiles-match' and 'tiles-mismatch' and move setTimeout logic to React
+* remove boardFreeze
+* isFlippedMap does not need to be a map, it can be a simple object (one value), change it to flippedTile = {rowIndex, columnIndex};

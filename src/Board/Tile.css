@@ -15,20 +15,24 @@
     vertical-align: middle;
     line-height: 4em;
     backface-visibility: hidden;
-    transition: transform .5s linear 0s;
+    transition: all .5s linear 0s;
 
 }
 .tileContainer > .frontFace {
 	transform: rotateY(0deg);
-	background:#FC0;
+	background-color: #3366cc;
 }
 .tileContainer > .backFace {
 	transform: rotateY(180deg);
-	background: #80BFFF;
+	background-color: #99ccff;
 }
-.tileContainer > .frontFaceRevealed {
+.tileContainer > .frontFaceHidden {
 	transform: rotateY(-180deg);
 }
-.tileContainer > .backFaceHidden{
+.tileContainer > .backFaceRevealed{
 	transform: rotateY(0deg);
+}
+
+.tileContainer > .mismatched {
+    background-color: #ff0000;
 }
