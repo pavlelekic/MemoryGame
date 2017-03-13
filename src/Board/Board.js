@@ -1,6 +1,4 @@
 // @flow weak
-/* eslint-disable no-alert, no-console */
-
 import './Board.css';
 import React, {Component} from 'react';
 import Tile from './Tile';
@@ -17,7 +15,7 @@ export default class Board extends Component {
 
     _renderRow(row, rowIndex) {
         return (
-            <div key={rowIndex}>
+            <div key={rowIndex} className='row'>
                 {row.map((tileData, columnIndex) => this._renderTile(rowIndex, columnIndex), this)}
             </div>
         );
@@ -46,9 +44,9 @@ export default class Board extends Component {
 
     render() {
         return (
-            <div className="board">
+            <section className="board">
                 {this.props.tiles.map(this._renderRow, this)}
-            </div>
+            </section>
         );
     }
 }

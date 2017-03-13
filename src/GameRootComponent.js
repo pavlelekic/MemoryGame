@@ -1,4 +1,5 @@
 // @flow weak
+import './GameRootComponent.css';
 import React, {Component} from 'react';
 import Score from './Score';
 import Timer from './Timer';
@@ -105,7 +106,7 @@ class MemoryGame extends Component {
 
     _renderDoYouWantToReplayCurrentLevel() {
         return (
-            <div>
+            <div id='game-content'>
                 <h2>No more time!</h2>
                 <h3>Play again this level?</h3>
                 <button onClick={this._replayCurrentLevel}>Go</button>
@@ -115,8 +116,8 @@ class MemoryGame extends Component {
 
     _renderPlayNextLevel() {
         return (
-            <div>
-                <h2>LEVEL COMPLETED!!</h2>
+            <div id='game-content'>
+                <h2>LEVEL COMPLETED!</h2>
                 <h3>Advance to next level?</h3>
                 <button onClick={this._advanceToNextLevel}>Go</button>
             </div>
@@ -127,9 +128,11 @@ class MemoryGame extends Component {
         let l = this.state.level;
 
         return (
-            <div style={{display: 'flex', flexDirection: 'column'}}>
-                <Timer secondsRemaining={l.getSecondsRemaining()} />
-                <Score score={l.getScore()} />
+            <div id='game-content'>
+                <section id='stats'>
+                    <Timer secondsRemaining={l.getSecondsRemaining()} />
+                    <Score score={l.getScore()} />
+                </section>
                 <Board
                     isPermanentlyRevealed={l.isPermanentlyRevealed}
                     tiles={l.getTilesMap()}

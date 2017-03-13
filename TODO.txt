@@ -1,9 +1,19 @@
 
 TO DO:
 * responsive thing
-
+* track total score
 
 ALREADY DONE:
 * make new events 'tiles-match' and 'tiles-mismatch' and move setTimeout logic to React
 * remove boardFreeze
 * isFlippedMap does not need to be a map, it can be a simple object (one value), change it to flippedTile = {rowIndex, columnIndex};
+
+WHAT CAN BE BETTER:
+* make game class which will track levels, total score (startNewGame(), startNextLevel(), startCurrentLevelAgain())
+* css in js
+* createClass instead of es6 crap
+* why-did-you-update || react-render-visualizer
+* better random function
+* tileMismatches has to be immutable!!
+* static container, pure component!!
+* git comments

@@ -15,7 +15,7 @@ export default function Level(initialSize = 2) {
     var flippedTile = null;
     var isPermanentlyRevealedMap = new Map();
     var score = 0;
-    var secondsRemaining = 40;
+    var secondsRemaining = 45;
     var intervalID = setInterval(decrementSecondsRemaining, 1000);
 
     function decrementSecondsRemaining() {
@@ -48,11 +48,8 @@ export default function Level(initialSize = 2) {
     }
 
     function isWholeBoardRevealed() {
-        if (isPermanentlyRevealedMap.size < size) {
-            return false;
-        }
-
-        return isPermanentlyRevealedMap.every(row => row.size === size);
+        return isPermanentlyRevealedMap.size === size &&
+            isPermanentlyRevealedMap.every(row => row.size === size);
     }
 
     function checkIfTilesMatch(rowIndex, columnIndex) {

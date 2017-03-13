@@ -1,4 +1,5 @@
 // @flow weak
+import './Score.css';
 import React, {PureComponent} from 'react';
 
 export default class Score extends PureComponent {
@@ -8,7 +9,11 @@ export default class Score extends PureComponent {
 
     render() {
         return (
-            <span style={{fontSize: 44}}>{`Score: ${this.props.score} points`}</span>
+            <span className='score-text'>
+                {'Score: '}
+                <span className='score-value'>{this.props.score}</span>
+                {' points'}
+            </span>
         );
     }
 }

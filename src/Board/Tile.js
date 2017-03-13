@@ -27,11 +27,7 @@ export default class Tile extends Component {
     render() {
         let p = this.props;
         let isRevealed = p.isFlipped || p.isPermanentlyRevealed || p.isMismatched;
-        let backClass = classNames(
-            "backFace",
-            {backFaceRevealed: isRevealed},
-            {mismatched: p.isMismatched}
-        );
+        let backClass = classNames("backFace", {backFaceRevealed: isRevealed}, {mismatched: p.isMismatched});
         let frontClass = classNames("frontFace", {frontFaceHidden: isRevealed});
 
         return (

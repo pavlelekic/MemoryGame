@@ -1,0 +1,13 @@
+
+.timer-text {
+    font-size: 1.4em;
+    font-weight: 300;
+}
+
+.timer-value {
+    font-weight: 600;
+}
+
+@media screen and (max-width: 2000px) {
+
+}

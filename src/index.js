@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import MemoryGame from './MemoryGame';
+import GameRootComponent from './GameRootComponent';
 import './index.css';
 
 ReactDOM.render((
-        <MemoryGame />
+        <GameRootComponent />
     ),
     document.getElementById('root')
 );

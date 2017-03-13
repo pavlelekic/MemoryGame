@@ -16,13 +16,14 @@
     line-height: 4em;
     backface-visibility: hidden;
     transition: all .5s linear 0s;
-
+    transition-property: transform, background-color;
 }
 .tileContainer > .frontFace {
 	transform: rotateY(0deg);
-	background-color: #3366cc;
+	background-color:  #cccccc;
 }
 .tileContainer > .backFace {
+    font-weight: 700;
 	transform: rotateY(180deg);
 	background-color: #99ccff;
 }
@@ -35,4 +36,19 @@
 
 .tileContainer > .mismatched {
     background-color: #ff0000;
+}
+.board {
+    padding: 1em;
+}
+
+@media (min-width: 768px) {
+    .tileContainer {
+        width: 6em;
+        height: 6em;
+        margin: 0.6em;
+    }
+    .tileContainer > div {
+        border-radius: 8px;
+        line-height: 6em;
+    }
 }
