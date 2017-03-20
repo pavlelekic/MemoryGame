@@ -3,7 +3,7 @@ import './GameRootComponent.css';
 import React, {Component} from 'react';
 import Score from './Score';
 import Timer from './Timer';
-import Level from './GameLogic/Level';
+import Level from '../GameLogic/Level';
 import Board from './Board/Board.js';
 const TimerMixin = require('react-timer-mixin');
 const reactMixin = require('react-mixin');

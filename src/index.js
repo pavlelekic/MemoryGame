@@ -1,6 +1,7 @@
+// @flow weak
 import React from 'react';
 import ReactDOM from 'react-dom';
-import GameRootComponent from './GameRootComponent';
+import GameRootComponent from './UI/GameRootComponent';
 import './index.css';
 
 ReactDOM.render((
