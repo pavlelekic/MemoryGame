@@ -43,6 +43,18 @@
 
 @media (min-width: 768px) {
     .tileContainer {
+        width: 5em;
+        height: 5em;
+        margin: 0.4em;
+    }
+    .tileContainer > div {
+        border-radius: 6px;
+        line-height: 5em;
+    }
+}
+
+@media (min-width: 1224px) {
+    .tileContainer {
         width: 6em;
         height: 6em;
         margin: 0.6em;

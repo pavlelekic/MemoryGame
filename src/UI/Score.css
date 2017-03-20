@@ -7,3 +7,15 @@
 .score-value {
     font-weight: 600;
 }
+
+@media (min-width: 768px) {
+    .score-text {
+        font-size: 1.7em;
+    }
+}
+
+@media (min-width: 1224px) {
+    .score-text {
+        font-size: 2em;
+    }
+}

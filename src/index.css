@@ -28,3 +28,7 @@ h3 {
 @media (max-width: 768px) {
     html {font-size: 12px;}
 }
+
+@media (max-width: 1224px) {
+    html {font-size: 14px;}
+}

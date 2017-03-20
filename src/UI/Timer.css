@@ -7,3 +7,15 @@
 .timer-value {
     font-weight: 600;
 }
+
+@media (min-width: 768px) {
+    .timer-text {
+        font-size: 1.7em;
+    }
+}
+
+@media (min-width: 1224px) {
+    .timer-text {
+        font-size: 2em;
+    }
+}
